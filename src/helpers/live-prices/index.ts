@@ -41,3 +41,5 @@ export const getCurrentGoldPrice = async (): Promise<number | null> => {
     return null;
   }
 };
+
+export const getCurrentCurrencyPrices = async () => {};
