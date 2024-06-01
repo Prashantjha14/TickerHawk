@@ -1,8 +1,10 @@
 import { connectToDb } from "@/db";
 import { getCurrentGoldPrice } from "@/helpers/live-prices/index";
 import Gold from "@/models/Gold.model";
+import { unstable_noStore as noStore } from "next/cache";
 
 export async function GET(request: Request) {
+  noStore();
   try {
     const goldPrice = await getCurrentGoldPrice();
 
