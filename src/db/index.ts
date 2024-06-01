@@ -7,12 +7,11 @@ export const connectToDb = async () => {
   mongoose.set("strictQuery", true);
 
   if (!config.mongoUri) {
-    return console.log("MISSING MONGODB_URL");
+    console.error("No Mongo URI found!");
+    return Promise.reject(new Error("No Mongo URI found!"));
   }
 
-  if (isConnected) {
-    return;
-  }
+  if (isConnected) return;
 
   try {
     await mongoose.connect(config.mongoUri, {
@@ -20,8 +19,11 @@ export const connectToDb = async () => {
     });
 
     isConnected = true;
+    return Promise.resolve();
   } catch (error) {
-    console.log(error);
-    throw new Error("Error connecting to database! \nError: " + error);
+    console.error(error);
+    return Promise.reject(
+      new Error("Error connecting to database! \nError: " + error)
+    );
   }
 };

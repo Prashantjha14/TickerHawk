@@ -34,10 +34,9 @@ export async function GET(request: NextRequest) {
   }
 
   const url = `https://www.google.com/finance/quote/${from}-${to}?sa=X&ved=2ahUKEwiWtpfwi5KGAxXFXWwGHTepCyQQmY0JegQIBxAp`;
-  // const url = `https://official-joke-api.appspot.com/random_joke?from=${from}`;
 
   const response = await fetch(url, {
-    next: { revalidate: 300 },
+    next: { revalidate: 3600 },
   });
   const html = await response.text();
   const $ = load(html);
@@ -73,10 +72,6 @@ export async function GET(request: NextRequest) {
       });
 
     const converted_amount = Number((price * amount).toFixed(4));
-
-    console.log(
-      `The price of ${amount} ${from} in ${to} is ${converted_amount} as conversion rate is ${price}.`
-    );
 
     return Response.json({
       success: true,

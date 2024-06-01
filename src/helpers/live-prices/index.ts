@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 
 /**
  * Delays the execution of code for a specified number of seconds.
@@ -9,13 +9,17 @@ function sleep(seconds: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
 
+const SBR_WS_ENDPOINT = `wss://${process.env.BRIGHT_DATA_AUTH}@brd.superproxy.io:9222`;
+
 /**
  * Retrieves the current gold price from a website.
  * @returns {Promise<number|null>} The current gold price in INR per gram, or null if an error occurs.
  */
 export const getCurrentGoldPrice = async (): Promise<number | null> => {
   try {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.connect({
+      browserWSEndpoint: SBR_WS_ENDPOINT,
+    });
     const page = await browser.newPage();
     await page.goto("https://www.tickertape.in/digital-gold");
 
