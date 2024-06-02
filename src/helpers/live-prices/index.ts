@@ -1,3 +1,4 @@
+import { load } from "cheerio";
 import puppeteer from "puppeteer-core";
 
 /**
@@ -17,33 +18,61 @@ const SBR_WS_ENDPOINT = `wss://${process.env.BRIGHT_DATA_AUTH}@brd.superproxy.io
  */
 export const getCurrentGoldPrice = async (): Promise<number | null> => {
   try {
-    const browser = await puppeteer.connect({
-      browserWSEndpoint: SBR_WS_ENDPOINT,
+    const url = "https://sgb.wintwealth.com";
+
+    const response = await fetch(url, {
+      next: { revalidate: 86400 },
     });
-    const page = await browser.newPage();
-    await page.goto("https://www.tickertape.in/digital-gold");
 
-    await sleep(3);
+    const html = await response.text();
+    const $ = load(html);
 
-    const result = await page.evaluate(() =>
-      Array.from(document.querySelectorAll(".price")).map(
-        (el) => el.textContent
-      )
+    const price = Number(
+      $(".sc-b7354746-13.oOFLh .sc-b7354746-14.iPCaXp .sc-3626dc31-7.hrDzKZ")
+        .first()
+        .text()
+        .replace(",", "")
+        .replace("₹", "")
     );
-    const goldPriceElement = result?.filter((el) => el?.includes("/gm"))[0];
-    const goldPrice = goldPriceElement
-      ? Number(goldPriceElement.split("/gm")[0].split("₹")[1].replace(",", ""))
-      : null;
 
-    await browser.close();
+    console.log(price);
 
-    if (!goldPrice) return null;
+    if (isNaN(price)) return null;
 
-    return goldPrice;
+    return price;
   } catch (error) {
     console.log(error);
     return null;
   }
 };
 
-export const getCurrentCurrencyPrices = async () => {};
+// export const getCurrentGoldPrice = async (): Promise<number | null> => {
+//   try {
+//     const browser = await puppeteer.connect({
+//       browserWSEndpoint: SBR_WS_ENDPOINT,
+//     });
+//     const page = await browser.newPage();
+//     await page.goto("https://www.tickertape.in/digital-gold");
+
+//     await sleep(3);
+
+//     const result = await page.evaluate(() =>
+//       Array.from(document.querySelectorAll(".price")).map(
+//         (el) => el.textContent
+//       )
+//     );
+//     const goldPriceElement = result?.filter((el) => el?.includes("/gm"))[0];
+//     const goldPrice = goldPriceElement
+//       ? Number(goldPriceElement.split("/gm")[0].split("₹")[1].replace(",", ""))
+//       : null;
+
+//     await browser.close();
+
+//     if (!goldPrice) return null;
+
+//     return goldPrice;
+//   } catch (error) {
+//     console.log(error);
+//     return null;
+//   }
+// };

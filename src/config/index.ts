@@ -3,6 +3,7 @@ interface Config {
   brightDataAuth: string;
   upstashRedisRestUrl: string;
   upstashRedisRestToken: string;
+  adminSecret: string;
 }
 
 function getEnvVar(key: string): string {
@@ -18,6 +19,7 @@ const config: Config = {
   brightDataAuth: getEnvVar("BRIGHT_DATA_AUTH"),
   upstashRedisRestUrl: getEnvVar("UPSTASH_REDIS_REST_URL"),
   upstashRedisRestToken: getEnvVar("UPSTASH_REDIS_REST_TOKEN"),
+  adminSecret: getEnvVar("ADMIN_SECRET"),
 };
 
 export default config;
