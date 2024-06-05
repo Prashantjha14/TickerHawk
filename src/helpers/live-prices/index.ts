@@ -21,7 +21,7 @@ export const getCurrentGoldPrice = async (): Promise<number | null> => {
     const url = "https://sgb.wintwealth.com";
 
     const response = await fetch(url, {
-      next: { revalidate: 86400 },
+      next: { revalidate: 43200 },
     });
 
     const html = await response.text();
