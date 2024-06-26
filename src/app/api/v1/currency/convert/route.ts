@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const to = searchParams.get("to")?.toUpperCase();
   const amount = Number(searchParams.get("amount"));
 
-  if (!from || !to || isNaN(amount)) {
+  if (!from || !to || isNaN(amount) || amount === 0) {
     return new Response("Missing parameters", { status: 400 });
   }
 

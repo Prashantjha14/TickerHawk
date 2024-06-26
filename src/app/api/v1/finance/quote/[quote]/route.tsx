@@ -1,5 +1,4 @@
 import { load } from "cheerio";
-import { unstable_noStore as noStore } from "next/cache";
 
 interface IParams {
   params: {
@@ -8,8 +7,8 @@ interface IParams {
 }
 
 export async function GET(request: Request, { params }: IParams) {
-  noStore();
   const { quote } = params;
+  const headers = request.headers;
 
   try {
     const url = `https://www.google.com/finance/quote/${quote}`;
