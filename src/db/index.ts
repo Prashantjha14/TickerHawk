@@ -1,4 +1,3 @@
-import config from "@/config";
 import mongoose from "mongoose";
 
 let isConnected: boolean = false;
@@ -6,7 +5,9 @@ let isConnected: boolean = false;
 export const connectToDb = async () => {
   mongoose.set("strictQuery", true);
 
-  if (!config.mongoUri) {
+  const mongoUri = process.env.MONGODB_URI;
+
+  if (!mongoUri) {
     console.error("No Mongo URI found!");
     return Promise.reject(new Error("No Mongo URI found!"));
   }
@@ -14,7 +15,7 @@ export const connectToDb = async () => {
   if (isConnected) return;
 
   try {
-    await mongoose.connect(config.mongoUri, {
+    await mongoose.connect(mongoUri, {
       dbName: "TickerHawk",
     });
 

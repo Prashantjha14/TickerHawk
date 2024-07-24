@@ -1,4 +1,3 @@
-import config from "@/config";
 import { connectToDb } from "@/db";
 import Gold from "@/models/Gold.model";
 import { NextRequest, NextResponse } from "next/server";
@@ -9,7 +8,7 @@ export async function POST(req: NextRequest) {
     .split("Bearer ")
     .at(1);
 
-  if (!authToken || authToken != config.adminSecret)
+  if (!authToken || authToken != process.env.ADMIN_SECRET)
     return NextResponse.json(
       { error: "Unauthorized" },
       {
@@ -21,32 +20,18 @@ export async function POST(req: NextRequest) {
 
   const price = Number(searchParams.get("price"));
   const currency = searchParams.get("currency")?.toString().toLocaleUpperCase();
-  const updateFrequency =
-    searchParams.get("updateFrequency")?.toString().toLocaleLowerCase() ||
-    "hourly";
 
   if (isNaN(price)) return Response.json({ success: false, status: 400 });
   if (!currency || !currencies.includes(currency))
     return Response.json({ success: false, status: 400 });
 
-  const frequencies = [
-    "instant",
-    "hourly",
-    "daily",
-    "weekly",
-    "monthly",
-    "yearly",
-  ];
-  if (!frequencies.includes(updateFrequency))
-    return Response.json({ success: false, status: 400 });
-
   try {
     await connectToDb();
 
-    await Gold.create({ price, currency, updateFrequency });
+    await Gold.create({ price, currency });
 
     return Response.json(
-      { success: true, goldPrice: price, currency, updateFrequency },
+      { success: true, goldPrice: price, currency },
       { status: 200 }
     );
   } catch (error) {
