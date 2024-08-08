@@ -35,13 +35,11 @@ export const getCurrentGoldPrice = async (): Promise<number | null> => {
         .replace("₹", "")
     );
 
-    console.log({ price });
-
     if (isNaN(price)) return null;
 
     return price;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return null;
   }
 };
