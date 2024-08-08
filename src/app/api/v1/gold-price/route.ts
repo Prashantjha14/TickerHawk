@@ -7,6 +7,7 @@ export async function GET(request: Request) {
 
   try {
     const goldPrice = await getCurrentGoldPrice();
+    console.log({ goldPrice });
 
     if (!goldPrice)
       return Response.json({

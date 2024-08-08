@@ -28,12 +28,14 @@ export const getCurrentGoldPrice = async (): Promise<number | null> => {
     const $ = load(html);
 
     const price = Number(
-      $(".sc-b7354746-13.oOFLh .sc-b7354746-14.iPCaXp .sc-3626dc31-7.hrDzKZ")
+      $(".sc-f7fa68c1-13.kzIAbp .sc-f7fa68c1-14.VxnLh .sc-3626dc31-7.hrDzKZ")
         .first()
         .text()
         .replace(",", "")
         .replace("₹", "")
     );
+
+    console.log({ price });
 
     if (isNaN(price)) return null;
 
