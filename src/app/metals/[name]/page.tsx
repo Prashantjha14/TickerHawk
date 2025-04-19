@@ -2,6 +2,7 @@ import { connectToDb } from "@/db";
 import Metals from "@/models/Metals.model";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 interface MetalPageProps {
   params: {
@@ -19,6 +20,10 @@ const MetalPage = async ({ params }: MetalPageProps) => {
 
   if (!metal) return notFound();
 
+  // Convert UTC to IST using toZonedTime
+  const timeInIST = toZonedTime(metal.date, "Asia/Kolkata");
+  const formattedDate = format(timeInIST, "dd MMM yyyy, hh:mm a");
+
   return (
     <div className="min-h-screen bg-[#0d0d0d] text-white flex flex-col items-center justify-center p-8">
       <h1 className="text-3xl font-bold mb-4 capitalize">{metalName} Price</h1>
@@ -28,7 +33,7 @@ const MetalPage = async ({ params }: MetalPageProps) => {
         </p>
         <p className="text-sm text-gray-400">Currency: {metal.currency}</p>
         <p className="text-sm text-gray-500 mt-2">
-          Updated on: {format(new Date(metal.date), "dd MMM yyyy, hh:mm a")}
+          Updated on: {formattedDate}
         </p>
       </div>
     </div>
