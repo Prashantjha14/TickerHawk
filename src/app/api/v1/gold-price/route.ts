@@ -1,6 +1,5 @@
 import { connectToDb } from "@/db";
 import { getCurrentGoldPrice } from "@/helpers/live-prices";
-import Metals, { IGoldPrice } from "@/models/Metals.model";
 
 export async function GET(request: Request) {
   const headers = request.headers;
